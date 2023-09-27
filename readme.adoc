@@ -2,6 +2,8 @@
 
 For a Machine-level environment, extension Smcdeleg encompasses all added CSRs and all behavior modifications for a hart, over all privilege levels. For a Supervisor-level environment, extension Ssccfg provides access to delegated counters, and to new supervisor-level state.  These extensions depend on the Zicntr and/or Zihpm extensions, and on the Sscsrind extension.
 
+The spec is currently in https://docs.google.com/document/d/1s-GeH5XpHBLzbQZucA8DPA7vvF7Xvf_nrPbrU2YLBcE/edit?usp=sharing[[.underline]#Google doc form#], but will move to adoc (in this repo) shortly.
+
 == License
 
 This work is licensed under a Creative Commons Attribution 4.0 International License (CC-BY-4.0). For details, see the link:LICENSE[LICENSE] file.
