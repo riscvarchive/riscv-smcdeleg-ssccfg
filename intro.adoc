@@ -43,6 +43,8 @@ transitions to and from M-mode that add latency to these performance
 critical supervisor/hypervisor code sections. This extension also
 defines one new CSR, scountinhibit.
 
+[NOTE]
+====
 __Indirect vs direct access to counters and event selectors was
 discussed at length. While a direct access method (e.g., new
 shpmcounter__i _CSRs) has the potential to reduce latency for
@@ -66,3 +68,4 @@ the index write and the alias register access is required, it is
 believed that pipelining of CSR accesses can ensure that the costs
 associated with this ordering are less than the cost associated with the
 mispredictions that result from the direct method._
+====

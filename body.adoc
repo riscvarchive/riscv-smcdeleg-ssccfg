@@ -1,3 +1,4 @@
+[[body]]
 == Counter Delegation Enable (menvcfg.CDE)
 
 Bit 60 of menvcfg (bit 28 of menvcfgh) is Counter Delegation Enable
@@ -26,7 +27,7 @@ Table 1 below.
 |===
 |*siselect value* |*sireg* |*sireg4* |*sireg2* |*sireg5*
 |0x40 |cycle^1^ |cycleh^1^ |cyclecfg^14^ |cyclecfgh^14^
-|0x41 |_See below_ | | |
+|0x41 4+^|_See below_ 
 |0x42 |instret^1^ |instreth^1^ |instretcfg^14^ |instretcfgh^14^
 |0x43 |hpmcounter3^2^ |hpmcounter3h^2^ |hpmevent3^2^ |hpmevent3h^23^
 |… |… |… |… |…
@@ -89,6 +90,7 @@ instruction exception.
 * An attempt from VS-mode to access any sireg* (really vsireg*) raises
 either an illegal instruction exception if menvcfg.CDE = 0, or a virtual
 instruction exception if menvcfg.CDE = 1.
+
 If Sscofpmf is implemented, sireg2 and sireg5 provide access only to a
 subset of the event selector registers. Specifically, event selector bit
 62 (MINH) is read-only 0 when accessed through sireg*. Similarly, if
@@ -161,6 +163,7 @@ LCOFI is the result of an overflow of a delegated counter (selective
 delegation)._
 
 * _“Bare Metal” Configuration_
+
 _The operating system (running in S-mode) can determine which counters
 have been delegated by writing all ones to scountinhibit, then reading
 back the resulting value. It can then use siselect and sireg* to program
@@ -186,6 +189,7 @@ state. Finally it can resume counting, by clearing scountinhibit, before
 resuming workload execution._
 
 * _Hypervisor Configuration_
+
 _A hypervisor may use the counters as described above, and can utilize
 the xINH bits in the event selectors (via sireg2/sireg5) to dictate
 whether the counter increments during hypervisor execution, guest
