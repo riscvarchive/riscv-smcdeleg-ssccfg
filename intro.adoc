@@ -1,15 +1,68 @@
 [[intro]]
 == Introduction
 
-Lorem ipsum indexterm:[Lorem ipsum] dolor sit amet, consectetur adipiscing elit, sed do *eiusmod tempor* incididunt ut labore et dolore magna aliqua. Felis imperdiet proin fermentum leo vel orci porta. Volutpat lacus laoreet non curabitur indexterm:[curabitur] gravida indexterm:[gravida]. Posuere urna nec tincidunt praesent semper feugiat nibh. Elit ``ullamcorper`` dignissim cras tincidunt lobortis. Malesuada fames ac turpis egestas integer eget. Tristique sollicitudin nibh sit amet commodo. Sed felis eget velit aliquet. Sit amet aliquam id diam maecenas ultricies mi. Consectetur purus ut faucibus pulvinar. Lectus urna duis convallis convallis tellus id. Fermentum iaculis eu non diam. Feugiat in fermentum posuere urna nec tincidunt praesent semper feugiat. Urna nec tincidunt praesent semper feugiat nibh.
+For a Machine-level environment, extension *Smcdeleg* (‘Sm’ for
+Privileged architecture and Machine-level extension, ‘cdeleg’ for
+Counter Delegation) encompasses all added CSRs and all behavior
+modifications for a hart, over all privilege levels. For a
+Supervisor-level environment, extension *Ssccfg* (‘Ss’ for Privileged
+architecture and Supervisor-level extension, ‘ccfg’ for Counter
+Configuration) provides access to delegated counters, and to new
+supervisor-level state. These extensions depend on the Zicntr and/or
+Zihpm extensions, and on the
+https://docs.google.com/document/u/0/d/1ZxTSUWX_9_VafWeA0l1ci9RFjmivLuZn-US9IbFOEWY/edit[[.underline]#Sscsrind#]
+extension.
 
-Commodo viverra maecenas accumsan lacus. Vulputate odio ut enim blandit indexterm:[blandit] volutpat maecenas volutpat blandit. Urna porttitor rhoncus dolor purus non. Tellus mauris a diam maecenas sed. Vitae auctor eu augue ut lectus. Ridiculus mus mauris vitae ultricies leo integer. Consequat semper viverra nam *libero* justo laoreet sit amet. Pellentesque pulvinar pellentesque habitant morbi tristique senectus et netus et. Ac placerat vestibulum lectus mauris ``ultrices`` eros in cursus turpis. Accumsan in nisl nisi scelerisque eu ultrices vitae. Cras ornare arcu dui vivamus. Vitae congue mauris rhoncus aenean. Consequat mauris nunc congue nisi vitae suscipit tellus. Tempus egestas sed sed risus pretium quam vulputate dignissim. Quis varius quam quisque id diam vel. Mattis nunc sed blandit libero volutpat sed cras ornare arcu. Amet mauris commodo quis imperdiet massa tincidunt nunc.
+=== Motivation
 
-[NOTE]
-====
-The name RISC-V indexterm:[RISC-V] was chosen to represent the fifth major RISC ISA design from UC Berkeley (RISC-I cite:[riscI-isca1981], RISC-II cite:[Katevenis:1983], SOAR cite:[Ungar:1984], and SPUR cite:[spur-jsscc1989] were the first four). We also pun on the use of the Roman numeral "V" to signify "variations" and "vectors", as support for a range of architecture research, including various data-parallel accelerators, is an explicit goal of the ISA design.
-====
+The Zicntr extension defines a set of fixed-event counters (cycle, time,
+instret), while the Zihpm extension defines programmable counters
+(hpmcounter__i__ and hpmevent__i__). The mcounteren CSR provides a means
+to make select counter CSRs readable in supervisor (S) mode, while the
+scounteren CSR provides a means for S-mode to further expose those
+selected counter CSRs as readable in user (U) mode. Counters and event
+selector CSRs can only be written in machine (M) mode.
 
-=== Sub Section of Introduction
+In modern “Rich OS” environments, hardware performance monitoring
+resources are managed by the kernel, kernel driver, and/or hypervisor.
+Counters may be configured with differing scopes, in some cases counting
+events system-wide, while in others counting events on behalf of a
+single virtual machine or application. In such environments, the latency
+of counter writes has a direct impact on overall profiling overhead as a
+result of frequent counter writes during:
 
-Pellentesque habitant morbi *tristique* senectus et netus et. Aliquam purus sit amet luctus. Odio eu ``feugiat`` pretium nibh ipsum consequat nisl vel. Euismod lacinia at quis risus sed vulputate odio ut. Eu sem integer vitae justo eget. Cursus euismod quis viverra nibh. Tempus egestas sed sed risus. Quis imperdiet massa tincidunt nunc pulvinar. Id venenatis a condimentum vitae sapien pellentesque habitant.
+
+. Sample collection, to clear overflow indication, and reload overflowed
+counter(s)
+. Context switch, between processes, threads, containers, or virtual
+machines
+
+This extension provides a means for M-mode to allow writing select
+counters and event selectors from S/HS-mode. The purpose is to avert
+transitions to and from M-mode that add latency to these performance
+critical supervisor/hypervisor code sections. This extension also
+defines one new CSR, scountinhibit.
+
+__Indirect vs direct access to counters and event selectors was
+discussed at length. While a direct access method (e.g., new
+shpmcounter__i _CSRs) has the potential to reduce latency for
+performance-sensitive operations such as context switch and counter
+overflow handling, by avoiding the need to write an index CSR for each
+counter access, in practice the benefits are difficult to reap. Because
+the CSR number is embedded in the immediate of CSR access instructions,
+functions to access individual counters by index have to utilize a
+switch statement to jump to the instruction that accesses the chosen
+counter. Counters are typically accessed infrequently (say every sample,
+or every context switch), so this switch statement is likely to incur a
+branch mispredict, which will undermine the performance benefits
+intended by avoiding an indirect access mechanism. A static routine that
+accesses all counters could be crafted without branches, but with Linux
+perf only counters associated with active perf events are accessed._
+
+_With indirect access, branching can be avoided for all cases, with the
+counter index simply written to the index register, and a static flow to
+read/write the associated alias register. While strong ordering between
+the index write and the alias register access is required, it is
+believed that pipelining of CSR accesses can ensure that the costs
+associated with this ordering are less than the cost associated with the
+mispredictions that result from the direct method._
