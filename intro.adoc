@@ -10,7 +10,7 @@ architecture and Supervisor-level extension, ‘ccfg’ for Counter
 Configuration) provides access to delegated counters, and to new
 supervisor-level state. These extensions depend on the Zicntr and/or
 Zihpm extensions, and on the
-https://docs.google.com/document/u/0/d/1ZxTSUWX_9_VafWeA0l1ci9RFjmivLuZn-US9IbFOEWY/edit[[.underline]#Sscsrind#]
+https://github.com/riscv/riscv-indirect-csr-access[[.underline]#Sscsrind#]
 extension.
 
 === Motivation
