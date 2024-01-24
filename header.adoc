@@ -57,6 +57,7 @@ Copyright 2023-2024 by RISC-V International.
 include::contributors.adoc[]
 
 include::intro.adoc[]
+
 include::body.adoc[]
 
 // The index must precede the bibliography

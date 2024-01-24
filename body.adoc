@@ -20,9 +20,7 @@ with counter _i_ can be read or written via sireg*, while siselect holds
 0x40+__i__. The counter state accessible via alias CSRs is shown in
 Table 1 below.
 
-[.text-center]
-*Table 1.* Indirect HPM State Mappings
-
+.Indirect HPM State Mappings
 [width="100%",cols="21%,20%,21%,18%,20%",options="header",]
 |===
 |*siselect value* |*sireg* |*sireg4* |*sireg2* |*sireg5*
@@ -144,6 +142,7 @@ optional whether the LCOFI bit (bit 13) in each of mideleg and hideleg,
 which allows all LCOFIs to be delegated to S-mode and VS-mode,
 respectively, is implemented and writable._
 ====
+
 [NOTE]
 ====
 __In a production “Rich OS” environment, it is expected that M-mode
