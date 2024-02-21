@@ -15,9 +15,9 @@ extension.
 
 === Motivation
 
-The Zicntr extension defines a set of fixed-event counters (cycle, time,
-instret), while the Zihpm extension defines programmable counters
-(hpmcounter__i__ and hpmevent__i__). The mcounteren CSR provides a means
+The Zicntr extension defines a set of fixed-event counters (`cycle`, `time`,
+`instret`), while the Zihpm extension defines programmable counters
+(`hpmcounter__i__` and `hpmevent__i__`). The mcounteren CSR provides a means
 to make select counter CSRs readable in supervisor (S) mode, while the
 scounteren CSR provides a means for S-mode to further expose those
 selected counter CSRs as readable in user (U) mode. Counters and event
@@ -45,9 +45,9 @@ defines one new CSR, scountinhibit.
 
 [NOTE]
 ====
-__Indirect vs direct access to counters and event selectors was
-discussed at length. While a direct access method (e.g., new
-shpmcounter__i _CSRs) has the potential to reduce latency for
+_Indirect vs direct access to counters and event selectors was 
+discussed at length. While a direct access method (e.g., new_ 
+`__shpmcounter__i` _CSRs) has the potential to reduce latency for
 performance-sensitive operations such as context switch and counter
 overflow handling, by avoiding the need to write an index CSR for each
 counter access, in practice the benefits are difficult to reap. Because
