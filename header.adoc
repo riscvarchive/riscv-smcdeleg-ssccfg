@@ -1,5 +1,4 @@
 = RISC-V Supervisor Counter Delegation Specification (Smcdeleg/Ssccfg)
-Authors: Beeman Strong, Atish Patra, Allen Baum
 :docgroup: RISC-V Performance Analysis SIG
 :description: RISC-V Supervisor Counter Delegation Specification (Smcdeleg/Ssccfg)
 :company: RISC-V.org
