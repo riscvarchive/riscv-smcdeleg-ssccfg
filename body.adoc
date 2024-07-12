@@ -172,14 +172,13 @@ counter, event selector, and counter configuration CSRs, for each
 counter in use, during context switch._
 
 _For sampling usages, the OS will initialize a counter with a large
-positive value suitably close to overflow, and clear the associated
-event selector overflow (OF) bit via `sireg3`/`sireg4`. Upon counter
+positive value suitably close to overflow via `sireg`/`sireg4`, and clear the associated
+event selector overflow (OF) bit via `sireg2`/`sireg5`. Upon counter
 overflow, OF will be set and an LCOFI will be pended. The LCOFI
 interrupt service routine (ISR) will be invoked in S-mode, and can
 inhibit counting for all delegated counters by writing to `scountinhibit`,
 then can read `scountovf` to determine which counters have overflowed. It
-can then re-initialize the overflowed counter(s) by writing the counter
-via `sireg`/`sireg4`, and clearing the OF bit via `sireg2`/`sireg5`, for each
+can then re-initialize the overflowed counter(s) and clear the OF bit, for each
 overflowed counter. It may opt to snapshot all counters, or other hart
 state. Finally it can resume counting, by clearing `scountinhibit`, before
 resuming workload execution._
